@@ -1,11 +1,12 @@
 import Navbar from "@/components/layout/NavBar";
+import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { DollarSign, Users, Clock1, Shield } from "lucide-react";
 
 function LandingPage() {
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       <Navbar />
       
       {/* Hero Section */}
@@ -83,7 +84,7 @@ function LandingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20">
+      <section className="py-20 flex-1">
         <div className="max-w-4xl mx-auto px-4 text-center space-y-6">
           <h2 className="text-3xl md:text-4xl font-bold">
             Ready to Start Splitting?
@@ -99,13 +100,8 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t py-8">
-        <div className="max-w-7xl mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>© 2025 HowMuchAh? All rights reserved.</p>
-        </div>
-      </footer>
-    </>
+      <Footer/>
+    </div>
   )
 }
 
