@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.1] - 12-11-2025
+
+### Fixed
+- Login page now redirects authenticated users to dashboard automatically
+- Prevents users from accessing login page when already logged in
+
 ## [0.1.0] - 12-11-2025
 
 ### Added
