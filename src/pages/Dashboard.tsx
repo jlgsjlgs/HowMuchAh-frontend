@@ -1,6 +1,13 @@
+import AuthenticatedNavBar from "@/components/layout/AuthenticatedNavBar";
+import Footer from "@/components/layout/Footer";
+
 function Dashboard() {
   return (
-    <div>helo</div>
+    <div className="min-h-screen flex flex-col">
+      <AuthenticatedNavBar/>
+
+      <Footer/>
+    </div>
   )
 }
 
