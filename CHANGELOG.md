@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+### Added
+- Authenticated navigation bar
+
 ## [0.1.1] - 12-11-2025
 
 ### Fixed
