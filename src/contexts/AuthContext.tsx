@@ -1,5 +1,7 @@
+// src/contexts/AuthContext.tsx
 import { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { authService } from '@/services/authService'
 import type { User, Session } from '@supabase/supabase-js'
 
 interface AuthContextType {
@@ -17,26 +19,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    let isMounted = true
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-      setUser(session?.user ?? null)
-      setLoading(false)
+      if (isMounted) {
+        setSession(session)
+        setUser(session?.user ?? null)
+        setLoading(false)
+      }
     })
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session)
-        setUser(session?.user ?? null)
+      async (event, session) => {
+        if (isMounted) {
+          setSession(session)
+          setUser(session?.user ?? null)
+          setLoading(false)
+        }
+
+        // Sync with backend ONLY when user signs in
+        if (event === 'SIGNED_IN' && session) {
+          authService.syncUserWithBackend().catch(err => 
+            console.error('Failed to sync user with backend:', err)
+          )
+        }
       }
     )
 
-    return () => subscription.unsubscribe()
+    return () => {
+      isMounted = false
+      subscription.unsubscribe()
+    }
   }, [])
 
   const logout = async () => {
-    await supabase.auth.signOut()
+    await authService.signOut()
   }
 
   return (
