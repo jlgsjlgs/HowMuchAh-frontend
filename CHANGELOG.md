@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - Authenticated navigation bar
+- `authService` now makes an API call to sync user credentials upon login
+
+### Fixed
+- Resolved an issue with `AuthContext` that was causing logged in users to be stuck at "Loading..." page
 
 ## [0.1.1] - 12-11-2025
 
