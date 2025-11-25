@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Resolved an issue with `AuthContext` that was causing logged in users to be stuck at "Loading..." page
+- Resolved an issue with `AuthContext` that was repeatedly syncing user information with the server
 
 ## [0.1.1] - 12-11-2025
 
