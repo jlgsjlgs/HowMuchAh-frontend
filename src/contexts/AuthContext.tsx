@@ -1,5 +1,5 @@
 // src/contexts/AuthContext.tsx
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
 import { authService } from '@/services/authService'
 import type { User, Session } from '@supabase/supabase-js'
@@ -17,6 +17,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+  const syncedUserIdRef = useRef<string | null>(null)
 
   useEffect(() => {
     let isMounted = true
@@ -40,7 +41,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
 
         // Sync with backend ONLY when user signs in
-        if (event === 'SIGNED_IN' && session) {
+        if (event === 'SIGNED_IN' && session && syncedUserIdRef.current !== session.user.id) {
+          syncedUserIdRef.current = session.user.id
           authService.syncUserWithBackend().catch(err => 
             console.error('Failed to sync user with backend:', err)
           )
@@ -55,6 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const logout = async () => {
+    syncedUserIdRef.current = null
     await authService.signOut()
   }
 
