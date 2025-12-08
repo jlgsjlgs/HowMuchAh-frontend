@@ -25,6 +25,9 @@ export function LoginForm({
           <CardDescription>
             Login with your Google account
           </CardDescription>
+          <CardDescription>
+            Only authorized users can access this application
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <FieldGroup>

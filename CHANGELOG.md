@@ -12,6 +12,9 @@ All notable changes to this project will be documented in this file.
 - Resolved an issue with `AuthContext` that was causing logged in users to be stuck at "Loading..." page
 - Resolved an issue with `AuthContext` that was repeatedly syncing user information with the server
 
+### Infrastructure
+- Set up Supabase trigger to check whitelist table during first time login, rejects if email is not whitelisted
+
 ## [0.1.1] - 12-11-2025
 
 ### Fixed

@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import { Toaster } from '@/components/ui/sonner';
 import LandingPage from "./pages/LandingPage";
 import About from "./pages/About";
 import Login from "./pages/Login";
@@ -10,6 +11,7 @@ function App() {
   
   return (
     <AuthProvider>
+      <Toaster />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />
