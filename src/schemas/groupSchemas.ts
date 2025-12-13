@@ -8,11 +8,11 @@ export const createGroupSchema = z.object({
     .string()
     .min(1, 'Group name is required')
     .min(1, 'Group name must be at least 1 characters')
-    .max(100, 'Group name must be less than 100 characters')
+    .max(50, 'Group name must be less than 50 characters')
     .trim(),
   description: z
     .string()
-    .max(500, 'Description must be less than 500 characters')
+    .max(150, 'Description must be less than 150 characters')
     .trim()
     .optional()
 });
@@ -28,12 +28,12 @@ export const updateGroupSchema = z
     name: z
       .string()
       .min(1, 'Group name must be at least 1 character')
-      .max(100, 'Group name must be less than 100 characters')
+      .max(50, 'Group name must be less than 50 characters')
       .trim()
       .optional(),
     description: z
       .string()
-      .max(500, 'Description must be less than 500 characters')
+      .max(150, 'Description must be less than 50 characters')
       .trim()
       .optional(),
   })
