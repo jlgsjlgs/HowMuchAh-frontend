@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { GalleryVerticalEnd } from "lucide-react"
-import { LoginForm } from "@/components/forms/LoginForm"
+import { LoginForm } from "@/components/auth/LoginForm"
 import { useAuth } from "@/contexts/AuthContext"
 import { useNavigate } from "react-router-dom"
 

@@ -11,7 +11,7 @@ import {
   Field,
   FieldGroup,
 } from "@/components/ui/field"
-import { authService } from "@/services/authService"
+import { authService } from "@/services/auth/authService"
 
 export function LoginForm({
   className,
@@ -24,6 +24,9 @@ export function LoginForm({
           <CardTitle className="text-xl">Welcome</CardTitle>
           <CardDescription>
             Login with your Google account
+          </CardDescription>
+          <CardDescription>
+            Only authorized users can access this application
           </CardDescription>
         </CardHeader>
         <CardContent>
