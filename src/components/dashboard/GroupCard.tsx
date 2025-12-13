@@ -38,7 +38,7 @@ function GroupCard({
       <CardContent>
         <div className="text-sm">
           <p className="text-muted-foreground">
-            Owner: <span className="font-medium">{group.ownerName}</span>
+            Owner: <span className="font-medium break-all overflow-hidden">{group.ownerName}</span>
           </p>
         </div>
       </CardContent>

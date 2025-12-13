@@ -1,4 +1,3 @@
-// components/common/ConfirmDialog.tsx
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,7 +13,7 @@ import {
 interface ConfirmDialogProps {
   trigger: React.ReactNode
   title: string
-  description: string
+  description: React.ReactNode 
   onConfirm: () => void | Promise<void>
   confirmText?: string
   cancelText?: string

@@ -19,9 +19,9 @@ export interface UpdateGroupRequest {
 }
 
 export interface GroupMember {
-  id: string;
+  userId: string;
   userName: string;
   userEmail: string;
   joinedAt: string;
-  isOwner: boolean;
+  owner: boolean;
 }

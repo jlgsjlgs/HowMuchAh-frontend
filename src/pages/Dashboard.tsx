@@ -6,6 +6,10 @@ import Footer from "@/components/layout/Footer";
 import CreateGroupCard from '@/components/dashboard/CreateGroupCard';
 import CreateGroupModal from '@/components/dashboard/CreateGroupModal';
 import GroupCard from '@/components/dashboard/GroupCard';
+import ManageMembersModal from '@/components/dashboard/ManageMembersModal';
+import SettingsModal from '@/components/dashboard/SettingsModal';
+import DeleteGroupModal from '@/components/dashboard/DeleteGroupModal';
+import LeaveGroupModal from '@/components/dashboard/LeaveGroupModal';
 import { groupQueries } from "@/services/groups/queries";
 
 type ModalType = 'create' | 'settings' | 'members' | 'leave' | 'delete' | null;
@@ -44,7 +48,9 @@ function Dashboard() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <CreateGroupCard onClick={() => handleOpenModal('create')} />
-            {groups?.map((group) => (
+            {groups
+              ?.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+              .map((group) => (
               <GroupCard
                 key={group.id}
                 group={group}
@@ -66,30 +72,31 @@ function Dashboard() {
         onClose={handleCloseModal} 
       />
 
-      {/* TODO: Add other modals */}
-      {/* <SettingsModal 
+      <SettingsModal 
         open={activeModal.type === 'settings'} 
         onClose={handleCloseModal}
-        groupId={activeModal.groupId}
-      /> */}
+        group={groups?.find(g => g.id === activeModal.groupId) || null}
+      />
       
-      {/* <ManageMembersModal 
+      <ManageMembersModal 
         open={activeModal.type === 'members'} 
         onClose={handleCloseModal}
         groupId={activeModal.groupId}
-      /> */}
+      />
       
-      {/* <LeaveGroupModal 
+      <LeaveGroupModal 
         open={activeModal.type === 'leave'} 
         onClose={handleCloseModal}
         groupId={activeModal.groupId}
-      /> */}
+        groupName={groups?.find(g => g.id === activeModal.groupId)?.name}
+      />
       
-      {/* <DeleteGroupModal 
+      <DeleteGroupModal 
         open={activeModal.type === 'delete'} 
         onClose={handleCloseModal}
         groupId={activeModal.groupId}
-      /> */}
+        groupName={groups?.find(g => g.id === activeModal.groupId)?.name}
+      />
     </div>
   );
 }
