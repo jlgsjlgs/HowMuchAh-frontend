@@ -10,7 +10,6 @@ A React-based frontend for a Splitwise-like expense splitting application.
 - **TailwindCSS v4** - Styling
 - **shadcn/ui** - Component library
 - **Tanstack Query** - Server state management
-- **Zustand** - Client state management
 - **React Hook Form** + **Zod** - Form handling & validation
 - **Axios** - HTTP client
 
