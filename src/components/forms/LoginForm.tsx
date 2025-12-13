@@ -11,7 +11,7 @@ import {
   Field,
   FieldGroup,
 } from "@/components/ui/field"
-import { authService } from "@/services/authService"
+import { authService } from "@/services/auth/authService"
 
 export function LoginForm({
   className,

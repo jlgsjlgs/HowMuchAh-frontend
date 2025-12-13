@@ -1,7 +1,7 @@
 // src/contexts/AuthContext.tsx
 import { createContext, useContext, useEffect, useState, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
-import { authService } from '@/services/authService'
+import { authService } from '@/services/auth/authService'
 import type { User, Session } from '@supabase/supabase-js'
 
 interface AuthContextType {
