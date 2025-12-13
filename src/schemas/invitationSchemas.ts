@@ -5,7 +5,11 @@ import { z } from 'zod';
  */
 export const sendInvitationSchema = z.object({
   invitedEmail: z
-    .email()
+    .string()
+    .min(1, 'Email is required')
+    .email('Please enter a valid email address')
+    .toLowerCase()
+    .trim(),
 });
 
 export type SendInvitationFormData = z.infer<typeof sendInvitationSchema>;

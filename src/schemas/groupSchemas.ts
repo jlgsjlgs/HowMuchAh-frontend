@@ -15,7 +15,6 @@ export const createGroupSchema = z.object({
     .max(500, 'Description must be less than 500 characters')
     .trim()
     .optional()
-    .or(z.literal('')), 
 });
 
 export type CreateGroupFormData = z.infer<typeof createGroupSchema>;
