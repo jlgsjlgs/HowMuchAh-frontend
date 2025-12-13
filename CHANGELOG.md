@@ -2,11 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [0.2.0] - 14-12-2025
 
 ### Added
 - Authenticated navigation bar
 - `authService` now makes an API call to sync user credentials upon login
+- Group features in the dashboard page
+  - Group creation
+  - Group setting modification features (change name/desc)
+  - Group member features (View & kick members, view & revoke invitations, send invitation to group)
+  - Group deletion feature
+  - Group leave feature
+- `useApiErrorHandler` hook to handle API errors
+
+### Changes
+- Downgraded `Zod` version due to some potential bug with `react-hook-form`
+
+### Removed
+- Removed `Zustand` as a dependency
 
 ### Fixed
 - Resolved an issue with `AuthContext` that was causing logged in users to be stuck at "Loading..." page
