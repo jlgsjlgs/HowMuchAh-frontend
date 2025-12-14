@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 14-12-2025
+
+### Added
+- Invitation accept & decline feature
+
+### Fixed
+- Resolved some text overflow issues on smaller screens
+
 ## [0.2.0] - 14-12-2025
 
 ### Added

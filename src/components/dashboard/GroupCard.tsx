@@ -23,27 +23,29 @@ function GroupCard({
   const isOwner = group.ownerId === currentUserId;
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="break-all overflow-hidden">{group.name}</CardTitle>
+    <Card className="flex flex-col h-full max-w-full overflow-hidden">
+    <CardHeader>
+      <CardTitle className="break-words pb-2 min-w-0">{group.name}</CardTitle>
+      <div className="h-10 min-w-0">
         {group.description && (
-          <p className="text-sm text-muted-foreground mt-1 break-words line-clamp-2">
+          <p className="text-sm text-muted-foreground mt-1 break-words line-clamp-2 min-w-0">
             {group.description.length > 100 
               ? `${group.description.substring(0, 100)}...` 
               : group.description}
           </p>
         )}
-      </CardHeader>
+      </div>
+    </CardHeader>
 
-      <CardContent>
-        <div className="text-sm">
-          <p className="text-muted-foreground">
-            Owner: <span className="font-medium break-all overflow-hidden">{group.ownerName}</span>
-          </p>
-        </div>
-      </CardContent>
+    <CardContent>
+      <div className="text-sm">
+        <p className="text-muted-foreground">
+          Owner: <span className="font-medium break-words">{group.ownerName}</span>
+        </p>
+      </div>
+    </CardContent>
 
-      <CardFooter className="flex flex-wrap gap-2">
+      <CardFooter className="flex flex-wrap gap-2 mt-auto">
         {isOwner ? (
           <>
             {/* Owner buttons */}
