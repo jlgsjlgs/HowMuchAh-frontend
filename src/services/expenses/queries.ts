@@ -7,7 +7,7 @@ export const expenseQueries = {
     groupId: string,
     page: number = 0,
     size: number = 20,
-    sortField: string = 'expenseDate',
+    sortField: string = 'createdAt',
     sortDirection: 'asc' | 'desc' = 'desc'
   ): Promise<PagedExpenseResponse> => {
     const { data } = await axiosClient.get('/api/expenses', {
