@@ -7,6 +7,7 @@ import LandingPage from "./pages/LandingPage";
 import About from "./pages/About";
 import Login from "./pages/Login";
 import Dashboard from './pages/Dashboard';
+import GroupDetail from './pages/GroupDetail';
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ function App() {
 
             <Route element={<ProtectedRoute />}>
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/group/:groupId" element={<GroupDetail />} />
             </Route>
           </Routes>
         </BrowserRouter>
