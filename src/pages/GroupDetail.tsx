@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useAuth } from '@/contexts/AuthContext';
 import AuthenticatedNavBar from '@/components/layout/AuthenticatedNavBar';
 import Footer from '@/components/layout/Footer';
 import GroupDetailHeader from '@/components/expenses/GroupDetailHeader';
+import AddExpenseModal from '@/components/expenses/AddExpenseModal';
 import { expenseQueries } from '@/services/expenses/queries';
 import {
   Table,
@@ -15,6 +18,8 @@ import {
 
 function GroupDetail() {
   const { groupId } = useParams<{ groupId: string }>();
+  const { user } = useAuth();
+  const [showAddExpense, setShowAddExpense] = useState(false);
 
   const { data: expenses, isLoading, error } = useQuery({
     queryKey: ['expenses', groupId],
@@ -75,8 +80,7 @@ function GroupDetail() {
   };
 
   const handleAddExpense = () => {
-    // TODO: Open add expense modal
-    console.log('Add expense');
+    setShowAddExpense(true);
   };
 
   const handleSettle = () => {
@@ -146,6 +150,13 @@ function GroupDetail() {
       </main>
 
       <Footer />
+
+      <AddExpenseModal
+        open={showAddExpense}
+        onClose={() => setShowAddExpense(false)}
+        groupId={groupId!}
+        currentUserId={user?.id || ''}
+      />
     </div>
   );
 }
