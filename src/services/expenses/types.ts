@@ -1,22 +1,3 @@
-export interface UserSummary {
-  id: string;
-  name: string;
-  email: string;
-}
-
-export interface Expense {
-  id: string;
-  groupId: string;
-  description: string;
-  totalAmount: number;
-  currency: string;
-  category: string;
-  expenseDate: string;
-  paidByUserId: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface ExpenseResponse {
   id: string;
   groupId: string;
@@ -40,6 +21,12 @@ export interface PagedExpenseResponse {
     totalElements: number;
     totalPages: number;
   };
+}
+
+export interface UserSummary {
+  id: string;
+  name: string;
+  email: string;
 }
 
 export interface ExpenseSplitResponse {
@@ -76,15 +63,5 @@ export interface ExpenseCreationRequest {
   paidByUserId: string;
   category: string;
   expenseDate?: string; // ISO date string (YYYY-MM-DD)
-  splits: ExpenseSplitDto[];
-}
-
-export interface ExpenseUpdateRequest {
-  description: string;
-  totalAmount: number;
-  currency: string;
-  paidByUserId: string;
-  category: string;
-  expenseDate: string; // ISO date string (YYYY-MM-DD), required for updates
   splits: ExpenseSplitDto[];
 }
