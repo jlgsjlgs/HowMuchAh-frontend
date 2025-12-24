@@ -27,38 +27,19 @@ export interface ExpenseResponse {
   expenseDate: string; // ISO date string
   paidByName: string;
   splitCount: number;
-  settledCount: number;
   createdAt: string; // ISO datetime string
   updatedAt: string; // ISO datetime string
+  settled: boolean;
 }
 
 export interface PagedExpenseResponse {
   content: ExpenseResponse[];
-  pageable: {
-    pageNumber: number;
-    pageSize: number;
-    sort: {
-      empty: boolean;
-      sorted: boolean;
-      unsorted: boolean;
-    };
-    offset: number;
-    paged: boolean;
-    unpaged: boolean;
+  page: {
+    size: number;
+    number: number;
+    totalElements: number;
+    totalPages: number;
   };
-  totalPages: number;
-  totalElements: number;
-  last: boolean;
-  size: number;
-  number: number;
-  sort: {
-    empty: boolean;
-    sorted: boolean;
-    unsorted: boolean;
-  };
-  numberOfElements: number;
-  first: boolean;
-  empty: boolean;
 }
 
 export interface ExpenseSplitResponse {

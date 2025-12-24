@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { BanknoteX } from 'lucide-react';
@@ -30,7 +30,11 @@ function GroupDetail() {
   const { user } = useAuth();
   const [showAddExpense, setShowAddExpense] = useState(false);
   const [currentPage, setCurrentPage] = useState(0); 
-  const pageSize = 20;
+  const pageSize = 6;
+
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [pageSize]);
 
   const { data: expenses, isLoading, error } = useQuery({
     queryKey: ['expenses', groupId, currentPage],
@@ -38,6 +42,8 @@ function GroupDetail() {
     enabled: !!groupId,
     retry: false,
   });
+  
+  console.log(expenses);
 
   if (isLoading) {
     return (
@@ -103,7 +109,7 @@ function GroupDetail() {
     <div className="min-h-screen flex flex-col">
       <AuthenticatedNavBar />
       
-      <main className="flex-1 container mx-auto p-4">
+      <main className="flex-1 container mx-auto p-4 flex flex-col">
         <GroupDetailHeader 
           groupId={groupId!} 
           onAddExpense={handleAddExpense}
@@ -111,97 +117,101 @@ function GroupDetail() {
         />
 
         {/* Table section */}
-        {expenses.content.length === 0 ? (
-          <Empty>
-            <EmptyHeader>
-              <EmptyMedia variant="icon">
-                <BanknoteX />
-              </EmptyMedia>
-              <EmptyTitle>No Expenses Yet</EmptyTitle>
-              <EmptyDescription>
-                You haven&apos;t created any expenses yet. Get started by adding
-                your first expense.
-              </EmptyDescription>
-            </EmptyHeader>
-          </Empty>
-        ) : (
-          <>
-            <div className="rounded-lg border bg-card overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[80px] sm:w-[100px]">Description</TableHead>
-                    <TableHead className="w-[80px] sm:w-[120px]">Paid By</TableHead>
-                    <TableHead className="text-right w-[70px] sm:w-[100px]">Amount</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {expenses.content.map((expense) => (
-                    <TableRow 
-                      key={expense.id}
-                      className="cursor-pointer hover:bg-muted/50"
-                      onClick={() => {/* TODO: Navigate to expense detail */}}
-                    >
-                      {/* Mobile: Combined date + description */}
-                      <TableCell className="py-4 sm:hidden">
-                        <div className="text-xs text-muted-foreground mb-1">
-                          {formatDate(expense.expenseDate)}
-                        </div>
-                        <div className="font-medium text-sm">
-                          {truncateText(expense.description, 15)}
-                        </div>
-                      </TableCell>
-                      
-                      {/* Desktop: Description only */}
-                      <TableCell className="hidden sm:table-cell py-4">
-                        <div className="font-medium">
-                          {expense.description}
-                        </div>
-                        <div className="text-xs text-muted-foreground mt-1">
-                          {formatDate(expense.expenseDate)}
-                        </div>
-                      </TableCell>
-                      
-                      <TableCell className="text-xs sm:text-sm py-4">
-                        {truncateText(expense.paidByName, 12)}
-                      </TableCell>
-                      <TableCell className="text-right font-semibold text-sm py-4">
-                        {formatCurrency(expense.totalAmount, expense.currency)}
-                      </TableCell>
+        <div className="flex-1 flex flex-col">
+          {expenses.content.length === 0 ? (
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <BanknoteX />
+                </EmptyMedia>
+                <EmptyTitle>No Expenses Yet</EmptyTitle>
+                <EmptyDescription>
+                  You haven&apos;t created any expenses yet. Get started by adding
+                  your first expense.
+                </EmptyDescription>
+              </EmptyHeader>
+            </Empty>
+          ) : (
+            <>
+              <div className="rounded-lg border bg-card overflow-x-auto">
+                <Table className="table-fixed w-full">
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[35%] sm:w-[45%]">Description</TableHead>
+                      <TableHead className="w-[40%] sm:w-[30%]">Paid By</TableHead>
+                      <TableHead className="text-right w-[25%] sm:w-[25%]">Amount</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-
-            {/* Pagination */}
-            {expenses.totalPages > 1 && (
-              <div className="mt-4 flex items-center justify-between px-2 sm:px-4">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage(prev => Math.max(0, prev - 1))}
-                  disabled={currentPage === 0}
-                >
-                  Previous
-                </Button>
-                
-                <span className="text-sm text-muted-foreground">
-                  Page {currentPage + 1} of {expenses.totalPages}
-                </span>
-                
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage(prev => Math.min(expenses.totalPages - 1, prev + 1))}
-                  disabled={currentPage === expenses.totalPages - 1}
-                >
-                  Next
-                </Button>
+                  </TableHeader>
+                  <TableBody>
+                    {expenses.content.map((expense) => (
+                      <TableRow 
+                        key={expense.id}
+                        className="cursor-pointer hover:bg-muted/50"
+                        onClick={() => {/* TODO: Navigate to expense detail */}}
+                      >
+                        {/* Mobile: Combined date + description */}
+                        <TableCell className="py-4 sm:hidden truncate">
+                          <div className="text-xs text-muted-foreground mb-1">
+                            {formatDate(expense.expenseDate)}
+                          </div>
+                          <div className="font-medium text-sm truncate">
+                            {truncateText(expense.description, 15)}
+                          </div>
+                        </TableCell>
+                        
+                        {/* Desktop: Description only */}
+                        <TableCell className="hidden sm:table-cell py-4">
+                          <div className="font-medium truncate">
+                            {expense.description}
+                          </div>
+                          <div className="text-xs text-muted-foreground mt-1">
+                            {formatDate(expense.expenseDate)}
+                          </div>
+                        </TableCell>
+                        
+                        <TableCell className="text-xs sm:text-sm py-4 truncate">
+                          {truncateText(expense.paidByName, 12)}
+                        </TableCell>
+                        <TableCell className="text-right font-semibold text-sm py-4">
+                          <span className={!expense.settled ? 'text-destructive' : ''}>
+                            {formatCurrency(expense.totalAmount, expense.currency)}
+                          </span>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </div>
-            )}
-          </>
-        )}
+
+              {/* Pagination */}
+              {expenses.page.totalPages > 1 && (
+                <div className="mt-auto pt-4 flex items-center justify-between px-2 sm:px-4">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(prev => Math.max(0, prev - 1))}
+                    disabled={currentPage === 0}
+                  >
+                    Previous
+                  </Button>
+                  
+                  <span className="text-sm text-muted-foreground">
+                    Page {expenses.page.number + 1} of {expenses.page.totalPages}
+                  </span>
+                  
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(prev => Math.min(expenses.page.totalPages - 1, prev + 1))}
+                    disabled={currentPage === expenses.page.totalPages - 1}
+                  >
+                    Next
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
+        </div>
       </main>
 
       <Footer />
