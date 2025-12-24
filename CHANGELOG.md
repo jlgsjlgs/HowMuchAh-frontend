@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 24-12-2025
+
+### Added
+- Expense features in the expense page
+  - Expense creation - supports three types of expense splits (equal, unequal, itemized)
+  - Viewing all group expenses with pagination
+  - Viewing individual expense details 
+  - Expense deletion (only for expenses which have not been settled)
+- Utility function for formatting currency and dates
+
+### Changes
+- Deprecated expense update API call since it was duplicating expense creation workflow
+
 ## [0.3.0] - 14-12-2025
 
 ### Added
