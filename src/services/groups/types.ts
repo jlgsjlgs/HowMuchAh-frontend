@@ -8,6 +8,14 @@ export interface Group {
   updatedAt: string;
 }
 
+export interface GroupMember {
+  userId: string;
+  userName: string;
+  userEmail: string;
+  joinedAt: string;
+  owner: boolean;
+}
+
 export interface CreateGroupRequest {
   name: string;
   description: string | null;
@@ -16,12 +24,4 @@ export interface CreateGroupRequest {
 export interface UpdateGroupRequest {
   name?: string;
   description?: string;
-}
-
-export interface GroupMember {
-  userId: string;
-  userName: string;
-  userEmail: string;
-  joinedAt: string;
-  owner: boolean;
 }
