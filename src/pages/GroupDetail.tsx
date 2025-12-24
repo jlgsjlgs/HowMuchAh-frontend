@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { BanknoteX } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import AuthenticatedNavBar from '@/components/layout/AuthenticatedNavBar';
 import Footer from '@/components/layout/Footer';
@@ -15,6 +16,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty"
 
 function GroupDetail() {
   const { groupId } = useParams<{ groupId: string }>();
@@ -101,9 +110,18 @@ function GroupDetail() {
 
         {/* Table section */}
         {expenses.content.length === 0 ? (
-          <div className="text-center py-12 bg-card rounded-lg">
-            <p className="text-muted-foreground">No expenses yet.</p>
-          </div>
+          <Empty>
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <BanknoteX />
+              </EmptyMedia>
+              <EmptyTitle>No Expenses Yet</EmptyTitle>
+              <EmptyDescription>
+                You haven&apos;t created any expenses yet. Get started by adding
+                your first expense.
+              </EmptyDescription>
+            </EmptyHeader>
+          </Empty>
         ) : (
           <div className="rounded-lg border bg-card overflow-x-auto">
             <Table>
@@ -121,12 +139,6 @@ function GroupDetail() {
                     className="cursor-pointer hover:bg-muted/50"
                     onClick={() => {/* TODO: Navigate to expense detail */}}
                   >
-                    {/* <TableCell className="text-xs sm:text-sm py-4">
-                      {formatDate(expense.expenseDate)}
-                    </TableCell>
-                    <TableCell className="font-medium text-sm py-4">
-                      <span>{truncateText(expense.description, 15)}</span>
-                    </TableCell> */}
                     <TableCell className="py-4 sm:hidden">
                       <div className="text-xs text-muted-foreground mb-1">
                         {formatDate(expense.expenseDate)}
