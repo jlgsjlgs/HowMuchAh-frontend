@@ -18,21 +18,23 @@ import {
 } from '@/components/ui/table';
 import {
   Empty,
-  EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty"
+import { Button } from '@/components/ui/button';
 
 function GroupDetail() {
   const { groupId } = useParams<{ groupId: string }>();
   const { user } = useAuth();
   const [showAddExpense, setShowAddExpense] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0); 
+  const pageSize = 20;
 
   const { data: expenses, isLoading, error } = useQuery({
-    queryKey: ['expenses', groupId],
-    queryFn: () => expenseQueries.getByGroup(groupId!),
+    queryKey: ['expenses', groupId, currentPage],
+    queryFn: () => expenseQueries.getByGroup(groupId!, currentPage, pageSize),
     enabled: !!groupId,
     retry: false,
   });
@@ -123,41 +125,82 @@ function GroupDetail() {
             </EmptyHeader>
           </Empty>
         ) : (
-          <div className="rounded-lg border bg-card overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[80px] sm:w-[100px]">Description</TableHead>
-                  <TableHead className="w-[80px] sm:w-[120px]">Paid By</TableHead>
-                  <TableHead className="text-right w-[70px] sm:w-[100px]">Amount</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {expenses.content.map((expense) => (
-                  <TableRow 
-                    key={expense.id}
-                    className="cursor-pointer hover:bg-muted/50"
-                    onClick={() => {/* TODO: Navigate to expense detail */}}
-                  >
-                    <TableCell className="py-4 sm:hidden">
-                      <div className="text-xs text-muted-foreground mb-1">
-                        {formatDate(expense.expenseDate)}
-                      </div>
-                      <div className="font-medium text-sm">
-                        {truncateText(expense.description, 15)}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-xs sm:text-sm py-4">
-                      {truncateText(expense.paidByName, 12)}
-                    </TableCell>
-                    <TableCell className="text-right font-semibold text-sm py-4">
-                      {formatCurrency(expense.totalAmount, expense.currency)}
-                    </TableCell>
+          <>
+            <div className="rounded-lg border bg-card overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[80px] sm:w-[100px]">Description</TableHead>
+                    <TableHead className="w-[80px] sm:w-[120px]">Paid By</TableHead>
+                    <TableHead className="text-right w-[70px] sm:w-[100px]">Amount</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                </TableHeader>
+                <TableBody>
+                  {expenses.content.map((expense) => (
+                    <TableRow 
+                      key={expense.id}
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() => {/* TODO: Navigate to expense detail */}}
+                    >
+                      {/* Mobile: Combined date + description */}
+                      <TableCell className="py-4 sm:hidden">
+                        <div className="text-xs text-muted-foreground mb-1">
+                          {formatDate(expense.expenseDate)}
+                        </div>
+                        <div className="font-medium text-sm">
+                          {truncateText(expense.description, 15)}
+                        </div>
+                      </TableCell>
+                      
+                      {/* Desktop: Description only */}
+                      <TableCell className="hidden sm:table-cell py-4">
+                        <div className="font-medium">
+                          {expense.description}
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-1">
+                          {formatDate(expense.expenseDate)}
+                        </div>
+                      </TableCell>
+                      
+                      <TableCell className="text-xs sm:text-sm py-4">
+                        {truncateText(expense.paidByName, 12)}
+                      </TableCell>
+                      <TableCell className="text-right font-semibold text-sm py-4">
+                        {formatCurrency(expense.totalAmount, expense.currency)}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+
+            {/* Pagination */}
+            {expenses.totalPages > 1 && (
+              <div className="mt-4 flex items-center justify-between px-2 sm:px-4">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.max(0, prev - 1))}
+                  disabled={currentPage === 0}
+                >
+                  Previous
+                </Button>
+                
+                <span className="text-sm text-muted-foreground">
+                  Page {currentPage + 1} of {expenses.totalPages}
+                </span>
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.min(expenses.totalPages - 1, prev + 1))}
+                  disabled={currentPage === expenses.totalPages - 1}
+                >
+                  Next
+                </Button>
+              </div>
+            )}
+          </>
         )}
       </main>
 
