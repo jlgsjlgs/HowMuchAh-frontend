@@ -46,8 +46,6 @@ function GroupDetail() {
     retry: false,
   });
   
-  console.log(expenses);
-
   if (isLoading) {
     return (
       <div className="min-h-screen flex flex-col">
