@@ -7,6 +7,7 @@ import AuthenticatedNavBar from '@/components/layout/AuthenticatedNavBar';
 import Footer from '@/components/layout/Footer';
 import GroupDetailHeader from '@/components/expenses/GroupDetailHeader';
 import AddExpenseModal from '@/components/expenses/AddExpenseModal';
+import ExpenseDetailModal from '@/components/expenses/ExpenseDetailModal';
 import { expenseQueries } from '@/services/expenses/queries';
 import {
   Table,
@@ -29,6 +30,7 @@ function GroupDetail() {
   const { groupId } = useParams<{ groupId: string }>();
   const { user } = useAuth();
   const [showAddExpense, setShowAddExpense] = useState(false);
+  const [selectedExpenseId, setSelectedExpenseId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(0); 
   const pageSize = 6;
 
@@ -105,6 +107,10 @@ function GroupDetail() {
     console.log('Settle group');
   };
 
+  const handleRowClick = (expenseId: string) => {
+    setSelectedExpenseId(expenseId);
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <AuthenticatedNavBar />
@@ -147,7 +153,7 @@ function GroupDetail() {
                       <TableRow 
                         key={expense.id}
                         className="cursor-pointer hover:bg-muted/50"
-                        onClick={() => {/* TODO: Navigate to expense detail */}}
+                        onClick={() => handleRowClick(expense.id)}
                       >
                         {/* Mobile: Combined date + description */}
                         <TableCell className="py-4 sm:hidden truncate">
@@ -222,6 +228,15 @@ function GroupDetail() {
         groupId={groupId!}
         currentUserId={user?.id || ''}
       />
+
+      {selectedExpenseId && (
+        <ExpenseDetailModal
+          open={!!selectedExpenseId}
+          onClose={() => setSelectedExpenseId(null)}
+          expenseId={selectedExpenseId}
+          groupId={groupId!}
+        />
+      )}
     </div>
   );
 }
