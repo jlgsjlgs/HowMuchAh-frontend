@@ -1,7 +1,8 @@
 // src/components/expenses/AddExpenseModal.tsx
 
 import { useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { X, ChevronsUpDown } from 'lucide-react';
@@ -40,6 +41,9 @@ import { CURRENCIES } from '@/lib/currencies';
 import { type CreateExpenseData, createExpenseSchema } from '@/schemas/expenseSchemas';
 import ExactSplitModal from './ExactSplitModal';
 import ItemizedSplitModal from './ItemizedSplitModal';
+import { useExpenseSplits } from '@/hooks/useExpenseSplits';
+import { useApiErrorHandler } from '@/hooks/useApiErrorHandler';
+import { expenseMutations } from '@/services/expenses/mutations';
 
 interface AddExpenseModalProps {
   open: boolean;
@@ -110,11 +114,26 @@ function AddExpenseModal({ open, onClose, groupId, currentUserId }: AddExpenseMo
     },
   });
 
+  const handleError = useApiErrorHandler<CreateExpenseData>(form.setError);
+
+  const queryClient = useQueryClient();
+
   const { data: members, isLoading: membersLoading } = useQuery({
     queryKey: ['groupMembers', groupId],
     queryFn: () => groupQueries.getMembers(groupId),
     enabled: open && !!groupId,
   });
+
+  const { mutate: createExpense, isPending } = useMutation({
+    mutationFn: expenseMutations.create,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['expenses', groupId]});
+      toast.success('Expense added successfully!');
+      form.reset();
+      onClose();
+    },
+    onError: handleError,
+  })
 
   useEffect(() => {
     if (open) {
@@ -147,17 +166,6 @@ function AddExpenseModal({ open, onClose, groupId, currentUserId }: AddExpenseMo
     }
   };
 
-  const onSubmit = (data: CreateExpenseData) => {
-    if (selectedMembers.length === 0) {
-      return;
-    }
-    
-    // TODO: Use custom hook to calculate splits based on splitConfig
-    console.log('Form data:', data);
-    console.log('Selected members:', selectedMembers);
-    console.log('Split config:', splitConfig);
-  };
-
   const selectedCurrency = CURRENCIES.find(c => c.code === form.watch('currency'));
   const paidByMember = members?.find(m => m.userId === form.watch('paidByUserId'));
   const descriptionLength = form.watch('description')?.length || 0;
@@ -184,6 +192,29 @@ function AddExpenseModal({ open, onClose, groupId, currentUserId }: AddExpenseMo
       default:
         return 'equally';
     }
+  };
+
+  const splits = useExpenseSplits(
+    totalAmount || 0,
+    selectedMembers,
+    splitConfig
+  );
+
+  const onSubmit = (data: CreateExpenseData) => {
+    if (selectedMembers.length === 0) {
+      return;
+    }
+    
+    createExpense({
+      groupId,
+      description: data.description,
+      totalAmount: data.totalAmount!,
+      currency: data.currency,
+      paidByUserId: data.paidByUserId,
+      category: data.category,
+      expenseDate: data.expenseDate,
+      splits: splits, 
+    });
   };
 
   return (
@@ -333,6 +364,7 @@ function AddExpenseModal({ open, onClose, groupId, currentUserId }: AddExpenseMo
                   type="text"
                   inputMode="decimal"
                   placeholder="0.00"
+                  autoComplete='off'
                   {...form.register('totalAmount', {
                     setValueAs: (value) => {
                       if (!value || value === '') return undefined;
@@ -482,7 +514,7 @@ function AddExpenseModal({ open, onClose, groupId, currentUserId }: AddExpenseMo
               </Button>
               <Button
                 type="submit"
-                disabled={!isFormValid || form.formState.isSubmitting}
+                disabled={!isFormValid || isPending}
                 className="bg-primary min-h-[44px]"
               >
                 Save
