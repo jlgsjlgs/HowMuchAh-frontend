@@ -25,6 +25,7 @@ import { expenseQueries } from '@/services/expenses/queries';
 import { expenseMutations } from '@/services/expenses/mutations';
 import { useApiErrorHandler } from '@/hooks/useApiErrorHandler';
 import { useState } from 'react';
+import { formatDate, formatCurrency } from '@/lib/formatters';
 
 interface ExpenseDetailModalProps {
   open: boolean;
@@ -60,25 +61,6 @@ function ExpenseDetailModal({ open, onClose, expenseId, groupId }: ExpenseDetail
 
   const handleDelete = () => {
     deleteExpense(expenseId);
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric',
-      month: 'long', 
-      day: 'numeric',
-    });
-  };
-
-  const formatCurrency = (amount: number, currency: string) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currency,
-      currencyDisplay: 'narrowSymbol',
-      minimumFractionDigits: amount % 1 === 0 ? 0 : 2,
-      maximumFractionDigits: 2,
-    }).format(amount);
   };
 
   // Check if expense is fully settled

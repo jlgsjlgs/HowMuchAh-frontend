@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Plus, PiggyBank } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { groupQueries } from '@/services/groups/queries';
+import { formatDate } from '@/lib/formatters';
 
 interface GroupDetailHeaderProps {
   groupId: string;
@@ -29,14 +30,6 @@ function GroupDetailHeader({ groupId, onAddExpense, onSettle }: GroupDetailHeade
   if (!group) {
     return null;
   }
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-SG', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
 
   return (
     <div className="mb-6">

@@ -9,6 +9,7 @@ import GroupDetailHeader from '@/components/expenses/GroupDetailHeader';
 import AddExpenseModal from '@/components/expenses/AddExpenseModal';
 import ExpenseDetailModal from '@/components/expenses/ExpenseDetailModal';
 import { expenseQueries } from '@/services/expenses/queries';
+import { formatDateShort, formatCurrency } from '@/lib/formatters';
 import {
   Table,
   TableBody,
@@ -78,26 +79,6 @@ function GroupDetail() {
     return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    // Mobile: Short format (12/20), Desktop: Full format (Dec 20, 2024)
-    return date.toLocaleDateString('en-SG', { 
-      month: 'numeric', 
-      day: 'numeric',
-      year: 'numeric',
-    });
-  };
-
-  const formatCurrency = (amount: number, currency: string) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currency,
-      currencyDisplay: 'narrowSymbol',
-      minimumFractionDigits: amount % 1 === 0 ? 0 : 2, // No decimals if whole number
-      maximumFractionDigits: 2,
-    }).format(amount);
-  };
-
   const handleAddExpense = () => {
     setShowAddExpense(true);
   };
@@ -158,7 +139,7 @@ function GroupDetail() {
                         {/* Mobile: Combined date + description */}
                         <TableCell className="py-4 sm:hidden truncate">
                           <div className="text-xs text-muted-foreground mb-1">
-                            {formatDate(expense.expenseDate)}
+                            {formatDateShort(expense.expenseDate)}
                           </div>
                           <div className="font-medium text-sm truncate">
                             {truncateText(expense.description, 15)}
@@ -171,7 +152,7 @@ function GroupDetail() {
                             {expense.description}
                           </div>
                           <div className="text-xs text-muted-foreground mt-1">
-                            {formatDate(expense.expenseDate)}
+                            {formatDateShort(expense.expenseDate)}
                           </div>
                         </TableCell>
                         
