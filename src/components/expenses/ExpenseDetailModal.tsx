@@ -64,7 +64,7 @@ function ExpenseDetailModal({ open, onClose, expenseId, groupId }: ExpenseDetail
   };
 
   // Check if expense is fully settled
-  const isSettled = expense?.splits.every(split => split.isSettled) ?? false;
+  const isSettled = expense?.splits.every(split => split.settled) ?? false;
 
   if (isLoading || !expense) {
     return (
@@ -148,11 +148,11 @@ function ExpenseDetailModal({ open, onClose, expenseId, groupId }: ExpenseDetail
                       <p className="text-xs text-muted-foreground break-all">{split.user.email}</p>
                     </div>
                     <div className="text-right shrink-0">
-                      <p className={`font-semibold ${!split.isSettled ? 'text-destructive' : 'text-green-600'}`}>
+                      <p className={`font-semibold ${!split.settled ? 'text-destructive' : 'text-green-600'}`}>
                         {formatCurrency(split.amountOwed, expense.currency)}
                       </p>
                       <p className="text-xs text-muted-foreground whitespace-nowrap">
-                        {split.isSettled ? 'Settled' : 'Pending'}
+                        {split.settled ? 'Settled' : 'Pending'}
                       </p>
                     </div>
                   </div>

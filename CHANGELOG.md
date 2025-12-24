@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.1] - 24-12-2025
+
+### Changes
+- Changed `isSettled` to `settled` for `ExpenseSplitResponse`, to match Jackson serialization
+
 ## [0.4.0] - 24-12-2025
 
 ### Added

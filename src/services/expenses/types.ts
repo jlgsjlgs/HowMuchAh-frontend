@@ -33,7 +33,7 @@ export interface ExpenseSplitResponse {
   id: string;
   user: UserSummary;
   amountOwed: number;
-  isSettled: boolean;
+  settled: boolean;
 }
 
 export interface ExpenseDetailResponse {
