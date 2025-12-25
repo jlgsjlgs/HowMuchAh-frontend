@@ -33,9 +33,9 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
       connectHeaders: {
         Authorization: `Bearer ${session.access_token}`
       },
-      debug: (str) => {
-        console.log('STOMP:', str)
-      },
+      // debug: (str) => {
+      //   console.log('STOMP:', str)
+      // },
       reconnectDelay: 5000, // Auto-reconnect every 5 seconds
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
@@ -46,7 +46,6 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
         // Subscribe to user's invitation channel
         client.subscribe(`/user/${user.id}/invitations`, (message) => {
           const payload: InvitationNotification = JSON.parse(message.body)
-          console.log('Received invitation notification:', payload)
           
           // Notify all subscribers
           invitationCallbacksRef.current.forEach(callback => callback(payload))
