@@ -1,23 +1,44 @@
 import { Menu, LogOut, MailWarning, Mail } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { ConfirmDialog } from "../common/ConfirmDialog"
 import { Link } from "react-router-dom"
 import { useAuth } from "@/contexts/AuthContext"
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { invitationQueries } from "@/services/invitations/queries"
 import { PendingInvitationsModal } from "../invitations/PendingInvitationsModal"
+import { useWebSocket } from "@/contexts/WebSocketContext"
+import { toast } from "sonner"
 
 function AuthenticatedNavbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [invitationsModalOpen, setInvitationsModalOpen] = useState(false)
   const { logout } = useAuth()
+  const { subscribeToInvitations } = useWebSocket()
+  const queryClient = useQueryClient()
 
   const { data: pendingInvitations = [] } = useQuery({
     queryKey: ['pending-invitations'],
     queryFn: invitationQueries.getPending,
-    refetchInterval: 30000,
   });
+
+  useEffect(() => {
+    const unsubscribe = subscribeToInvitations(() => {
+      // Invalidate and refetch pending invitations
+      queryClient.invalidateQueries({ queryKey: ['pending-invitations'] })
+      
+      // Show toast notification
+      toast.info('New Group Invitation', {
+        action: {
+          label: 'View',
+          onClick: () => setInvitationsModalOpen(true)
+        }
+      })
+    })
+
+    // Cleanup subscription on unmount
+    return unsubscribe
+  }, [subscribeToInvitations, queryClient])
 
   const hasPendingInvitations = pendingInvitations.length > 0
 

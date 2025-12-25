@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - 25-12-2025
+
+### Added
+- WebSocket context
+
+### Changes
+- Deprecated polling for new group invitations
+- Implemented event-based websocket notification for group invitations
+
 ## [0.5.0] - 25-12-2025
 
 ### Added
