@@ -8,6 +8,7 @@ import Footer from '@/components/layout/Footer';
 import GroupDetailHeader from '@/components/expenses/GroupDetailHeader';
 import AddExpenseModal from '@/components/expenses/AddExpenseModal';
 import ExpenseDetailModal from '@/components/expenses/ExpenseDetailModal';
+import SettlementHistoryModal from '@/components/settlement/SettlementHistoryModal';
 import { expenseQueries } from '@/services/expenses/queries';
 import { formatDateShort, formatCurrency } from '@/lib/formatters';
 import {
@@ -31,6 +32,7 @@ function GroupDetail() {
   const { groupId } = useParams<{ groupId: string }>();
   const { user } = useAuth();
   const [showAddExpense, setShowAddExpense] = useState(false);
+  const [showSettlement, setShowSettlement] = useState(false);
   const [selectedExpenseId, setSelectedExpenseId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(0); 
   const pageSize = 6;
@@ -82,8 +84,7 @@ function GroupDetail() {
   };
 
   const handleSettle = () => {
-    // TODO: Open settle modal
-    console.log('Settle group');
+    setShowSettlement(true);
   };
 
   const handleRowClick = (expenseId: string) => {
@@ -216,6 +217,12 @@ function GroupDetail() {
           groupId={groupId!}
         />
       )}
+
+      <SettlementHistoryModal
+        open={showSettlement}
+        onClose={() => setShowSettlement(false)}
+        groupId={groupId!}
+      />
     </div>
   );
 }

@@ -26,4 +26,10 @@ export const expenseQueries = {
     const { data } = await axiosClient.get(`/api/expenses/${expenseId}`);
     return data;
   },
+
+  // GET /api/expenses/{groupId}/unsettled - Get number of unsettled expenses for a group
+  getUnsettledCount: async (groupId: string): Promise<number> => {
+    const { data } = await axiosClient.get(`/api/expenses/${groupId}/unsettled`);
+    return data;
+  }
 };

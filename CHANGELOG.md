@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 25-12-2025
+
+### Added
+- Settlement feature
+
 ## [0.4.1] - 24-12-2025
 
 ### Changes
