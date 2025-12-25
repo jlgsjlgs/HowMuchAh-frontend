@@ -98,7 +98,7 @@ function SettlementDetailModal({
                       {/* Amount */}
                       <div className="mt-3 pt-3 border-t">
                         <p className="text-lg font-bold text-center">
-                          {formatCurrency(transaction.amount, transaction.currency)}
+                          {transaction.currency} {formatCurrency(transaction.amount, transaction.currency)}
                         </p>
                       </div>
                     </div>
