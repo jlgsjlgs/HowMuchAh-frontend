@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.1] - 25-12-2025
+
+### Fixed
+- Resolved CSS issue for expense adding modal
+
 ## [0.6.0] - 25-12-2025
 
 ### Added
