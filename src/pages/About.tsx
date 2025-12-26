@@ -27,13 +27,36 @@ function About() {
           type="single"
           collapsible
           className="w-full"
-          defaultValue="item-1"
         >
           <AccordionItem value="item-1" className="w-full">
-            <AccordionTrigger>Placeholder1</AccordionTrigger>
+            <AccordionTrigger>Do I need to pay to use the application?</AccordionTrigger>
             <AccordionContent className="flex flex-col gap-4">
               <p>
-                For future
+                Nope! It's completely free!
+              </p>
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-2" className="w-full">
+            <AccordionTrigger>How do I gain access to the application?</AccordionTrigger>
+            <AccordionContent className="flex flex-col gap-4">
+              <p>
+                You can contact the developer. However, the application is currently only available for closed invitation-only testing (as of 26/12/2025).
+              </p>
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-3" className="w-full">
+            <AccordionTrigger>How do I report a bug, or request for a feature?</AccordionTrigger>
+            <AccordionContent className="flex flex-col gap-4">
+              <p>
+                You can either contact the developer or open an issue at the <u><a href="https://github.com/jlgsjlgs/HowMuchAh-frontend/issues">GitHub Repository</a></u> for the project.
+              </p>
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-4" className="w-full">
+            <AccordionTrigger>What is the tech stack used for the project?</AccordionTrigger>
+            <AccordionContent className="flex flex-col gap-4">
+              <p>
+                React and Spring Boot.
               </p>
             </AccordionContent>
           </AccordionItem>
