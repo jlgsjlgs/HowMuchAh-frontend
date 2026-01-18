@@ -240,7 +240,7 @@ function ManageMembersModal({ open, onClose, groupId }: ManageMembersModalProps)
                             title="Revoke Invitation"
                             description={
                               <span className="break-all">
-                                Are you sure you want to revoke the invitation for <br/><span className="font-semibold">{invitation.invitedEmail}</span>?
+                                Revoke the invitation for <br/><span className="font-semibold">{invitation.invitedEmail}</span>?
                               </span>
                             }
                             onConfirm={() => revokeInvitation(invitation.id)}
