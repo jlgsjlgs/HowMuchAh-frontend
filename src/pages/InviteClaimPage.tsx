@@ -61,7 +61,7 @@ export default function InviteClaimPage() {
         email,
       }),
     onSuccess: () => {
-      toast.success('Successfully joined the group!');
+      toast.success('Successfully invited into the group!');
       setClaimStatus('success');
       setCountdown(5);
     },
