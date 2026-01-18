@@ -149,7 +149,7 @@ export default function InviteClaimPage() {
               </div>
               <CardTitle className="text-center">Successfully Joined!</CardTitle>
               <CardDescription className="text-center">
-                You've been added to{' '}
+                You've been invited to{' '}
                 <span className="font-semibold break-words">
                   {validationResult.linkDetails?.groupName}
                 </span>
@@ -184,7 +184,7 @@ export default function InviteClaimPage() {
               </div>
               <CardTitle className="text-center">Failed to Join</CardTitle>
               <CardDescription className="text-center">
-                Unable to join the group. Please try again or contact the group owner.
+                Unable to be invited into the group. Please try again or contact the group owner.
               </CardDescription>
             </CardHeader>
             <CardContent>
