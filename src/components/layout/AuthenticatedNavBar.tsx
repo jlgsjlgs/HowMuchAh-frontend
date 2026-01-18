@@ -11,7 +11,7 @@ import { useWebSocket } from "@/contexts/WebSocketContext"
 import { toast } from "sonner"
 
 function AuthenticatedNavbar() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(true)
   const [invitationsModalOpen, setInvitationsModalOpen] = useState(false)
   const { logout } = useAuth()
   const { subscribeToInvitations } = useWebSocket()

@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 18-01-2026
+
+### Added
+- Invitation link feature
+
+### Changes
+- Minor CSS fixes
+
 ## [1.0.0] - 26-12-2025
 
 ### Changes

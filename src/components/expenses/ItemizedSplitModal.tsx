@@ -205,7 +205,7 @@ function ItemizedSplitModal({
           </div>
 
           {/* Scrollable items list */}
-          <div className="flex-1 overflow-y-auto p-2 pt-2 space-y-3">
+          <div className="flex-1 overflow-y-auto p-1 pt-2 space-y-3">
             {items.map((item) => (
               <div key={item.id} className="grid grid-cols-12 gap-2 items-start">
                 {/* Description */}
@@ -286,7 +286,7 @@ function ItemizedSplitModal({
                 </div>
 
                 {/* Delete button */}
-                <div className="col-span-1 flex justify-end">
+                <div className="col-span-1 flex justify-end pl-6">
                   <Button
                     type="button"
                     variant="ghost"

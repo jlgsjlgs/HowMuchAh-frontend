@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { UserMinus, Mail } from 'lucide-react';
+import { UserMinus, Mail, Copy, RefreshCw, Link2 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -16,12 +16,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
 import { sendInvitationSchema, type SendInvitationFormData } from '@/schemas/invitationSchemas';
 import { groupQueries } from '@/services/groups/queries';
 import { groupMutations } from '@/services/groups/mutations';
 import { invitationQueries } from '@/services/invitations/queries';
 import { invitationMutations } from '@/services/invitations/mutations';
+import { invitationLinkQueries } from '@/services/invitationLinks/queries';
+import { invitationLinkMutations } from '@/services/invitationLinks/mutations';
 import { useApiErrorHandler } from '@/hooks/useApiErrorHandler';
 import type { InvitationStatus } from '@/services/invitations/types';
 
@@ -47,6 +50,13 @@ function ManageMembersModal({ open, onClose, groupId }: ManageMembersModalProps)
     queryKey: ['group-invitations', groupId],
     queryFn: () => invitationQueries.getByGroup(groupId!),
     enabled: !!groupId && open,
+  });
+
+  // Fetch current invitation link
+  const { data: invitationLink, isLoading: loadingLink } = useQuery({
+    queryKey: ['invitation-link', groupId],
+    queryFn: () => invitationLinkQueries.getCurrent(groupId!),
+    enabled: !!groupId && open && activeTab === 'add',
   });
 
   // Remove member mutation
@@ -103,8 +113,28 @@ function ManageMembersModal({ open, onClose, groupId }: ManageMembersModalProps)
     },
   });
 
+  // Regenerate invitation link mutation
+  const { mutate: regenerateLink, isPending: regeneratingLink } = useMutation({
+    mutationFn: () => invitationLinkMutations.regenerate(groupId!),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['invitation-link', groupId] });
+      toast.success('Invitation link regenerated successfully!');
+    },
+    onError: (error: unknown) => {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || 'Failed to regenerate link');
+    },
+  });
+
   const onSubmitInvite = (data: SendInvitationFormData) => {
     sendInvitation(data);
+  };
+
+  const copyLinkToClipboard = () => {
+    if (invitationLink?.link) {
+      navigator.clipboard.writeText(invitationLink.link);
+      toast.success('Link copied to clipboard!');
+    }
   };
 
   const getStatusBadge = (status: InvitationStatus) => {
@@ -210,7 +240,7 @@ function ManageMembersModal({ open, onClose, groupId }: ManageMembersModalProps)
                             title="Revoke Invitation"
                             description={
                               <span className="break-all">
-                                Are you sure you want to revoke the invitation for <br/><span className="font-semibold">{invitation.invitedEmail}</span>?
+                                Revoke the invitation for <br/><span className="font-semibold">{invitation.invitedEmail}</span>?
                               </span>
                             }
                             onConfirm={() => revokeInvitation(invitation.id)}
@@ -230,30 +260,118 @@ function ManageMembersModal({ open, onClose, groupId }: ManageMembersModalProps)
           </TabsContent>
 
           {/* Add Member Tab */}
-          <TabsContent value="add">
-            <form onSubmit={handleSubmit(onSubmitInvite)} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="invitedEmail">
-                  Email Address <span className="text-destructive">*</span>
-                </Label>
-                <Input
-                  id="invitedEmail"
-                  type="email"
-                  placeholder="friend@example.com"
-                  autoComplete="off"
-                  {...register('invitedEmail')}
-                  disabled={sendingInvite}
-                />
-                {errors.invitedEmail && (
-                  <p className="text-sm text-destructive">{errors.invitedEmail.message}</p>
-                )}
+          <TabsContent value="add" className="space-y-6">
+            {/* Email Invitation Section */}
+            <div className="space-y-4">
+              <div className="space-y-1">
+                <h3 className="text-sm font-medium">Send Email Invitation</h3>
+                <p className="text-sm text-muted-foreground">
+                  Send a direct invitation to a specific email address
+                </p>
+              </div>
+              <form onSubmit={handleSubmit(onSubmitInvite)} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="invitedEmail">
+                    Email Address <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="invitedEmail"
+                    type="email"
+                    placeholder="friend@example.com"
+                    autoComplete="off"
+                    {...register('invitedEmail')}
+                    disabled={sendingInvite}
+                  />
+                  {errors.invitedEmail && (
+                    <p className="text-sm text-destructive">{errors.invitedEmail.message}</p>
+                  )}
+                </div>
+
+                <Button type="submit" disabled={sendingInvite} className="w-full">
+                  <Mail className="h-4 w-4 mr-2" />
+                  {sendingInvite ? 'Sending...' : 'Send Invitation'}
+                </Button>
+              </form>
+            </div>
+
+            <Separator />
+
+            {/* Invitation Link Section */}
+            <div className="space-y-4">
+              <div className="space-y-1">
+                <h3 className="text-sm font-medium">Share Invitation Link</h3>
+                <p className="text-sm text-muted-foreground">
+                  Anyone with this link can join the group
+                </p>
               </div>
 
-              <Button type="submit" disabled={sendingInvite} className="w-full">
-                <Mail className="h-4 w-4 mr-2" />
-                {sendingInvite ? 'Sending...' : 'Send Invitation'}
-              </Button>
-            </form>
+              {loadingLink ? (
+                <div className="flex justify-center py-4">
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+                </div>
+              ) : invitationLink ? (
+                <div className="space-y-3">
+                  {/* Link Display with Copy Button */}
+                  <div className="flex gap-2">
+                    <Input
+                      value={invitationLink.link}
+                      readOnly
+                      className="flex-1 font-mono text-sm"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      onClick={copyLinkToClipboard}
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                  </div>
+
+                  {/* Link Info */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-sm text-muted-foreground p-3 bg-muted/50 rounded-lg">
+                    <div className="space-y-1">
+                      <p>
+                        Uses: {invitationLink.currentUses} / {invitationLink.maxUses}
+                      </p>
+                      <p>
+                        Expires: {new Date(invitationLink.expiresAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Regenerate Button */}
+                  <ConfirmDialog
+                    trigger={
+                      <Button
+                        variant="destructive"
+                        className="w-full"
+                        disabled={regeneratingLink}
+                      >
+                        <RefreshCw className={`h-4 w-4 mr-2 ${regeneratingLink ? 'animate-spin' : ''}`} />
+                        {regeneratingLink ? 'Regenerating...' : 'Regenerate Link'}
+                      </Button>
+                    }
+                    title="Regenerate Invitation Link"
+                    description={
+                      <span className="break-words">
+                        This will invalidate the current link and create a new one. Anyone with the old link won't be able to use it anymore.
+                        <br /><br />
+                        You are only allowed to create <b>3 invitation links per group in a month.</b>
+                      </span>
+                    }
+                    onConfirm={() => regenerateLink()}
+                    confirmText="Regenerate"
+                    variant="destructive"
+                  />
+                </div>
+              ) : (
+                <div className="text-center py-4 text-muted-foreground">
+                  <Link2 className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                  <p>Failed to load invitation link</p>
+                </div>
+              )}
+            </div>
           </TabsContent>
         </Tabs>
       </DialogContent>

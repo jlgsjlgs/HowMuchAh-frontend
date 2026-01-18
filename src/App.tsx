@@ -9,6 +9,7 @@ import About from "./pages/About";
 import Login from "./pages/Login";
 import Dashboard from './pages/Dashboard';
 import GroupDetail from './pages/GroupDetail';
+import InviteClaimPage from './pages/InviteClaimPage';
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ function App() {
               <Route path="/" element={<LandingPage />} />
               <Route path="/about" element={<About />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/invite-link/:linkId" element={<InviteClaimPage />} />
 
               <Route element={<ProtectedRoute />}>
                 <Route path="/dashboard" element={<Dashboard />} />

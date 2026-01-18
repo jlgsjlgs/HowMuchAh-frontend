@@ -3,7 +3,7 @@ import { z } from 'zod';
 /**
  * Schema for sending an invitation
  */
-export const sendInvitationSchema = z.object({
+export const claimInvitationLinkSchema = z.object({
   invitedEmail: z
     .string()
     .min(1, 'Email is required')
@@ -16,4 +16,4 @@ export const sendInvitationSchema = z.object({
     ),
 });
 
-export type SendInvitationFormData = z.infer<typeof sendInvitationSchema>;
+export type claimInvitationLinkFormData = z.infer<typeof claimInvitationLinkSchema>;

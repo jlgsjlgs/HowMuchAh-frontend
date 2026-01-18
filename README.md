@@ -24,6 +24,7 @@ HowMuchAh is a Splitwise-inspired expense splitting application. The frontend pr
 - Automated settlement calculations
 - Responsive mobile-first design with dark mode support
 - Form validation with Zod schemas
+- Creation and sharing of invitation links to groups
 
 ## Built With
 
