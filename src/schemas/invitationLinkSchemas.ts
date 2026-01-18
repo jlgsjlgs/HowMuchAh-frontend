@@ -9,7 +9,11 @@ export const claimInvitationLinkSchema = z.object({
     .min(1, 'Email is required')
     .email('Please enter a valid email address')
     .toLowerCase()
-    .trim(),
+    .trim()
+    .refine(
+      (email) => email.endsWith('@gmail.com'),
+      { message: 'Only Gmail addresses are allowed' }
+    ),
 });
 
 export type claimInvitationLinkFormData = z.infer<typeof claimInvitationLinkSchema>;
